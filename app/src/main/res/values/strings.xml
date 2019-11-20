@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Board</string>
+    <string name="loading">loading</string>
+    <string name="tip">share photo to Board</string>
+    <string name="delete">Delete</string>
+</resources>
