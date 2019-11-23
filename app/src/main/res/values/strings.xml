@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Board</string>
     <string name="loading">loading</string>
-    <string name="tip">share photo to Board</string>
+    <string name="tip">share photo to here, the latest photo shared will be shown forever</string>
     <string name="delete">Delete</string>
+    <string name="error">error</string>
 </resources>

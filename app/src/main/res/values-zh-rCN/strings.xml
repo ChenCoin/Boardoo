@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">黑板</string>
     <string name="loading">加载中</string>
-    <string name="tip">分享图片到黑板，黑板会永远展示最后一张图片</string>
+    <string name="tip">分享图片到这里，这里会永远展示最后一张图片</string>
     <string name="delete">删除</string>
+    <string name="error">出错了</string>
 </resources>
