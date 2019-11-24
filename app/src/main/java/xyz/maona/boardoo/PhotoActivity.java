@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.TextView;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -31,7 +29,6 @@ public class PhotoActivity extends Activity {
     private View index;
     View background;
     private View menu;
-    private View menuBox;
     private View loading;
     private boolean menuShowing = false;
 
@@ -44,7 +41,6 @@ public class PhotoActivity extends Activity {
         index = findViewById(R.id.index);
         background = findViewById(R.id.background);
         menu = findViewById(R.id.menu);
-        menuBox = findViewById(R.id.menu_box);
         loading = findViewById(R.id.loading);
 
         findViewById(R.id.cancel).setOnClickListener(view -> hideMenu());
@@ -58,26 +54,17 @@ public class PhotoActivity extends Activity {
             visibility(index);
         });
         photoView.setOnLongClickListener(this::showMenu);
+        background.setOnClickListener(view -> {
+            if (menuShowing) hideMenu();
+        });
     }
 
     private void config() {
         View decorView = getWindow().getDecorView();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        } else {
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR |
-                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
-        }
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
 
     @Override
@@ -96,7 +83,6 @@ public class PhotoActivity extends Activity {
     private void visibility(View show) {
         photoView.setVisibility(View.INVISIBLE);
         index.setVisibility(View.INVISIBLE);
-        menu.setVisibility(View.INVISIBLE);
         loading.setVisibility(View.INVISIBLE);
         show.setVisibility(View.VISIBLE);
     }
@@ -167,8 +153,11 @@ public class PhotoActivity extends Activity {
         background.setVisibility(View.VISIBLE);
         ObjectAnimator.ofFloat(background, "alpha", 0, 0.6F)
                 .setDuration(300).start();
-        ObjectAnimator.ofFloat(menuBox, "translationY", menuBox.getHeight(), 0)
-                .setDuration(300).start();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(menu,
+                "translationY", menu.getHeight(), 0);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setDuration(300);
+        animator.start();
         return true;
     }
 
@@ -176,11 +165,14 @@ public class PhotoActivity extends Activity {
         menuShowing = false;
         ObjectAnimator.ofFloat(background, "alpha", 0.6F, 0)
                 .setDuration(300).start();
-        ObjectAnimator.ofFloat(menuBox, "translationY", 0, menuBox.getHeight())
-                .setDuration(300).start();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(menu,
+                "translationY", 0, menu.getHeight());
+        animator.setDuration(300);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.start();
         new Handler().postDelayed(() -> {
             menu.setVisibility(View.INVISIBLE);
-            background.setVisibility(View.VISIBLE);
+            background.setVisibility(View.INVISIBLE);
         }, 300);
     }
 

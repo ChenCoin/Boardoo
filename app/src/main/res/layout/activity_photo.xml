@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
     <View
         android:id="@+id/background"
         android:layout_width="match_parent"
@@ -13,16 +19,10 @@
         android:background="@color/gray"
         android:visibility="invisible" />
 
-    <com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/photoView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="true"
+        android:clipToPadding="false"
         android:fitsSystemWindows="true">
 
         <include
@@ -30,10 +30,7 @@
             layout="@layout/index"
             android:visibility="invisible" />
 
-        <include
-            android:id="@+id/menu"
-            layout="@layout/menu"
-            android:visibility="invisible" />
+        <include layout="@layout/menu" />
 
         <include
             android:id="@+id/loading"
