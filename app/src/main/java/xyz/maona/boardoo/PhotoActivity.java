@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -35,7 +36,13 @@ public class PhotoActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        config();
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() |
+                    View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         setContentView(R.layout.activity_photo);
         photoView = findViewById(R.id.photoView);
         index = findViewById(R.id.index);
@@ -54,17 +61,10 @@ public class PhotoActivity extends Activity {
             visibility(index);
         });
         photoView.setOnLongClickListener(this::showMenu);
+        photoView.setZoomable(true);
         background.setOnClickListener(view -> {
             if (menuShowing) hideMenu();
         });
-    }
-
-    private void config() {
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() |
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
 
     @Override
